@@ -7,33 +7,49 @@ use Illuminate\Http\Request;
 
 class ProductosController extends Controller
 {
-    public function create(){
-        return view('productos.create');
-
+    public function index()
+    {
+        $productos = Producto::all();
+        return view('productos.index', compact('productos'));
     }
 
-    public function index(){
-        return view('productos.index');
+    public function create()
+    {
+        $producto = new Producto();
+        $producto->id = 0;
+        return view('productos.create', compact('producto'));
+    }
+
+    public function edit($id)
+    {
+        $producto = Producto::find($id);
+        return view('productos.create', compact('producto'));
+    }
+
+    public function store(Request $request)
+    {
+        if ($request->id == 0) {
+            $producto = new Producto();
+        } else {
+            $producto = Producto::find($request->id);
+        }
+
+        $producto->codigo = $request->codigo;
+        $producto->descripcion = $request->descripcion;
+        $producto->precio = $request->precio;
+        $producto->porcentaje_impuesto = $request->porcentaje_impuesto; // Agregado
         
-    }
+        $producto->save();
 
-    public function store(Request $request){
-       $producto = new Producto();
-       $producto->codigo = $request->codigo;
-       $producto->nombre = $request->nombre;
-       $producto->precio = $request->precio;
-       $producto->existencia = $request->existencia;
-
-       $producto-> save();
-
-       return redirect()-> route('productos');
+        return redirect()->route('productos');
     }
 
     public function delete($id)
     {
         $producto = Producto::find($id);
-        $producto->delete();
+        if ($producto) {
+            $producto->delete();
+        }
         return redirect()->route('productos');
-
     }
 }

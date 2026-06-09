@@ -1,47 +1,48 @@
 @extends('adminlte::page')
 
-@section('title', 'Dashboard')
+@section('title', 'Lista de Productos')
 
 @section('content_header')
+    {{ Breadcrumbs::render('productos') }}
     <h1>Lista de productos</h1>
 @stop
 
 @section('content')
-    <p>Welcome to this beautiful admin panel.</p>
-    <table>
-        <thead>
-            <tr>
-                <th scope="col">Nombre</th>
-                <th scope="col">Precio</th>
-                <th scope="col">Existencias</th>
-                <th scope="col">Acciones</th>
-            </tr>
-        </thead>
+    <div class="mb-3">
+        <a class="btn btn-success" href="{{ route('producto.nuevo') }}">Crear Nuevo Producto</a>
+    </div>
 
-        <tbody>
-            <tr>
-                <th scope="row">id</th>
-                <td>codigo</td>
-                <td>descripcion</td>
-                <td>precio</td>
-                <td>existencias</td>
-                <td>
-                    <a class="btn btn-primary" href="{{route('producto.nuevo')}}">Editar</a>
-                    <button class="btn btn-danger">Eliminar</button>
-                </td>
+<table class="table table-striped table-bordered table-hover">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Código</th>
+            <th scope="col">Descripción</th>
+            <th scope="col">Precio</th>
+            <th scope="col">% Impuesto</th>
+            <th scope="col">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach($productos as $producto)
+        <tr>
+            <th scope="row">{{ $producto->id }}</th>
+            <td>{{ $producto->codigo }}</td>
+            <td>{{ $producto->descripcion }}</td>
+            <td>${{ number_format($producto->precio, 2) }}</td>
+            <td>{{ $producto->porcentaje_impuesto }}%</td>
+            <td>
+                <a href="{{ route('producto.editar', $producto->id) }}" class="btn btn-primary btn-sm">Editar</a>
+                
+                <form method="POST" action="{{ route('producto.eliminar', $producto->id) }}" style="display:inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar producto?')">Eliminar</button>
+                </form>
+            </td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>
 
-            </tr>
-
-        </tbody>
-
-    </table>
-@stop
-
-@section('css')
-    {{-- Add here extra stylesheets --}}
-    {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
-@stop
-
-@section('js')
-    <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
 @stop

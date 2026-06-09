@@ -317,6 +317,22 @@ return [
         ],
         
         ],
+
+        [
+            'text' => 'Almacenes',
+            'icon' => 'fas fa-fw fa-building',
+            'submenu' => [
+                [
+                    'text' => 'Nuevo',
+                    'route' => 'almacen.nuevo',
+                ],
+                [
+                    'text' => 'Lista',
+                    'route' => 'almacenes',
+                ],
+            ],
+        ],
+
     ],
 
     /*
